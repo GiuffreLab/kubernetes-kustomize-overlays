@@ -1,0 +1,12 @@
+resources:
+  - ../../base
+  - namespace.yaml
+  - service.yaml
+
+namespace: prod-web-app
+
+patches:
+  - path: patch.yaml
+    target:
+      kind: Deployment
+      name: web-app
