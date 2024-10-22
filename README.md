@@ -358,7 +358,7 @@ for ns in dev-web-app prod-web-app; do  echo "Namespace: $ns"
   echo "-----------------------------"
 done
 ```
-
+---
 Show `logs` from all `pods` in a `namespace`
 
 For `dev`
@@ -370,7 +370,7 @@ For `prod`
 ```sh
 kubectl logs -l app=web-app -n prod-web-app
 ```
-
+---
 
 ## Summary
 This documentation provides instructions for deploying the Flask application using Kubernetes and Kustomize. The repository structure allows for easy customization of the application for different environments (e.g., development and production) while sharing a common base configuration.
