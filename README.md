@@ -346,7 +346,7 @@ This command will revert the deployment to the previous version.
 
 Here is a list of commands that can be helpful when looking at the full deployment
 
-Show all `pods` `services` and `replica sets` for both
+Show all `pods` `services` and `replica sets` for the `dev-web-app` and `prod-web-app`
 ```sh
 for ns in dev-web-app prod-web-app; do  echo "Namespace: $ns"            
   echo "Pods:"
