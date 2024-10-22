@@ -252,7 +252,15 @@ By using these commands, you can verify that the overlays are correctly modifyin
      kubectl get services -n prod-web-app
      ```
 
-## Rolling Out New Versions
+4. **Accessing the Application**
+   - Once the services are running, you can access the application via the LoadBalancer IP or NodePort that was assigned.
+   - To get the external IP address of the service, use:
+     ```sh
+     kubectl get services -n <namespace>
+     ```
+     Replace `<namespace>` with `dev-web-app` or `prod-web-app`.
+   - Open your browser and navigate to the IP address and port of the service. You should see the "Kubernetes Kustomization Test Page" displayed.
+   - **Refreshing the Page**: Refresh the page multiple times to see the different containers serving the web view. The hostname displayed on the page will change based on the container serving the request, which helps demonstrate the load balancing across the replicas.
 Rolling out new versions of the Flask application involves updating the container image version in the Kubernetes manifests and monitoring the rollout process to ensure it completes successfully.
 
 ### Step 1: Update the Image Version
