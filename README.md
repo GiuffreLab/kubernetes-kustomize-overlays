@@ -247,15 +247,15 @@ By using these commands, you can verify that the overlays are correctly modifyin
 2. **Deploy the Application**
    - To deploy the development environment:
      ```sh
-     kubectl apply -k overlays/dev
+     kubectl create -k overlays/dev
      ```
    - To deploy the production environment:
      ```sh
-     kubectl apply -k overlays/prod
+     kubectl create -k overlays/prod
      ```
    - To deploy both environments using the top-level kustomization file:
      ```sh
-     kubectl apply -k .
+     kubectl create -k .
      ```
 
 3. **Verify the Deployment**
@@ -288,17 +288,19 @@ To roll out a new version, update the image tag in the deployment manifest for t
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: flask-web-app
+  name: web-app  # Must match the base deployment name for patching
 spec:
-  replicas: 3  # Override replica count for dev
+  replicas: 5  # Override replica count for dev
   template:
     spec:
       containers:
-      - name: flask-web-app
-        image: <your-dockerhub-username>/flask-web-app:v2  # Update image version
-        env:
-        - name: PORT
-          value: "8081"  # Replace the PORT for the dev environment
+        - name: web-app  # This name is crucial to ensure that Kustomize knows which container to modify
+          image: giuffrelab/flask-web-app:v3  # Change the version here IE: v1, v2 or v3
+          env:
+            - name: PORT
+              value: "8081"  # Replace the PORT for the dev environment
+          ports:
+            - containerPort: 8081  # Override containerPort for dev
 ```
 
 ### Step 2: Apply the Changes
