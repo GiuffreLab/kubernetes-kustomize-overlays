@@ -322,6 +322,8 @@ kubectl rollout status deployment/flask-web-app -n <namespace>
 ```
 Replace `<namespace>` with the appropriate namespace (`dev-web-app` or `prod-web-app`). This command will provide information about the status of the deployment and whether the rollout is progressing as expected.
 
+During this time you should still have access to your web pages, and depending on the update rollout status, you may hit pages that are on different versions of deployment, but your service is never completely down.
+
 ### Step 4: Verify the Rollout
 Once the rollout is complete, you can verify that the new version is running:
 
