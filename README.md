@@ -342,6 +342,36 @@ kubectl rollout undo deployment/flask-web-app -n <namespace>
 ```
 This command will revert the deployment to the previous version.
 
+### Helpful Commands
+
+Here is a list of commands that can be helpful when looking at the full deployment
+
+Show all `pods` `services` and `replica sets` for both
+```sh
+for ns in dev-web-app prod-web-app; do  echo "Namespace: $ns"            
+  echo "Pods:"
+  kubectl get pods -n $ns
+  echo "Services:"
+  kubectl get svc -n $ns
+  echo "ReplicaSets:"
+  kubectl get rs -n $ns
+  echo "-----------------------------"
+done
+```
+
+Show `logs` from all `pods` in a `namespace`
+
+For `dev`
+```sh
+kubectl logs -l app=web-app -n dev-web-app
+```
+
+For `prod`
+```sh
+kubectl logs -l app=web-app -n prod-web-app
+```
+
+
 ## Summary
 This documentation provides instructions for deploying the Flask application using Kubernetes and Kustomize. The repository structure allows for easy customization of the application for different environments (e.g., development and production) while sharing a common base configuration.
 
