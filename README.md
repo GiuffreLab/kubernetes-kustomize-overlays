@@ -281,7 +281,7 @@ By using these commands, you can verify that the overlays are correctly modifyin
 Rolling out new versions of the Flask application involves updating the container image version in the Kubernetes manifests and monitoring the rollout process to ensure it completes successfully.
 
 ### Step 1: Update the Image Version
-To roll out a new version, update the image tag in the deployment manifest for the desired environment. For example, if you are rolling out version `v2`:
+To roll out a new version, update the image tag in the deployment manifest for the desired environment. This is helpful for seeing how Kubernetes handles changes of a service to a new versions without downtime in a rolling fasion. For example, if you are rolling out version `v2` to the dev environment:
 
 #### Updating the Development Overlay (`overlays/dev/patch.yaml`)
 ```yaml
