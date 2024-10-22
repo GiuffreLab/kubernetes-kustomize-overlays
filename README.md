@@ -353,7 +353,7 @@ for ns in dev-web-app prod-web-app; do  echo "Namespace: $ns"
   kubectl get pods -n $ns
   echo "Services:"
   kubectl get svc -n $ns
-  echo "ReplicaSets:"
+  echo "Replica-Sets:"
   kubectl get rs -n $ns
   echo "-----------------------------"
 done
