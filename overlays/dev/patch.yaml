@@ -1,0 +1,16 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-app  # Must match the base deployment name for patching
+spec:
+  replicas: 5  # Override replica count for dev
+  template:
+    spec:
+      containers:
+        - name: web-app  # This name is crucial to ensure that Kustomize knows which container to modify
+          image: giuffrelab/flask-web-app:v3
+          env:
+            - name: PORT
+              value: "8081"  # Replace the PORT for the dev environment
+          ports:
+            - containerPort: 8081  # Override containerPort for dev
