@@ -41,27 +41,27 @@ The **base** directory contains the generic Kubernetes resources that apply to a
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: flask-web-app
+  name: web-app
   labels:
-    app: flask-web-app
+    app: web-app
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: flask-web-app
+      app: web-app
   template:
     metadata:
       labels:
-        app: flask-web-app
+        app: web-app
     spec:
       containers:
-      - name: flask-web-app
-        image: <your-dockerhub-username>/flask-web-app:v1
-        ports:
-        - containerPort: 8080
-        env:
-        - name: PORT
-          value: "8080"
+        - name: web-app
+          image: giuffrelab/flask-web-app:v1
+          env:
+            - name: PORT
+              value: "8080"  # Keeping the port configuration
+          ports:
+            - containerPort: 8080
 ```
 
 ### Base Kustomization (`base/kustomization.yaml`)
@@ -90,16 +90,19 @@ This patch modifies the base deployment to suit the development environment.
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: flask-web-app
+  name: web-app  # Must match the base deployment name for patching
 spec:
-  replicas: 3  # Override replica count for dev
+  replicas: 5  # Override replica count for dev
   template:
     spec:
       containers:
-      - name: flask-web-app
-        env:
-        - name: PORT
-          value: "8081"  # Replace the PORT for the dev environment
+        - name: web-app  # This name is crucial to ensure that Kustomize knows which container to modify
+          image: giuffrelab/flask-web-app:v3
+          env:
+            - name: PORT
+              value: "8081"  # Replace the PORT for the dev environment
+          ports:
+            - containerPort: 8081  # Override containerPort for dev
 ```
 
 #### Development Service (`overlays/dev/service.yaml`)
@@ -107,15 +110,14 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: flask-web-app-service-dev
-  namespace: dev-web-app
+  name: flask-app-service-dev
 spec:
   selector:
-    app: flask-web-app
+    app: web-app
   ports:
   - protocol: TCP
-    port: 80
-    targetPort: 8081
+    port: 8081  # External port for development
+    targetPort: 8081  # Internal container port, matches the environment variable in the deployment patch
   type: LoadBalancer
 ```
 
@@ -135,10 +137,18 @@ The **prod** overlay customizes the base configuration for a production environm
 
 #### Production Namespace (`overlays/prod/namespace.yaml`)
 ```yaml
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: prod-web-app
+resources:
+  - ../../base
+  - namespace.yaml
+  - service.yaml
+
+namespace: dev-web-app
+
+patches:
+  - path: patch.yaml
+    target:
+      kind: Deployment
+      name: web-app
 ```
 
 #### Production Patch (`overlays/prod/patch.yaml`)
@@ -147,16 +157,19 @@ This patch modifies the base deployment to suit the production environment.
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: flask-web-app
+  name: web-app  # Must match the base deployment name for patching
 spec:
-  replicas: 5  # Override replica count for production
+  replicas: 5  # Override replica count for dev
   template:
     spec:
       containers:
-      - name: flask-web-app
-        env:
-        - name: PORT
-          value: "8082"  # Replace the PORT for the production environment
+        - name: web-app  # This name is crucial to ensure that Kustomize knows which container to modify
+          image: giuffrelab/flask-web-app:v1
+          env:
+            - name: PORT
+              value: "8082"  # Replace the PORT for the dev environment
+          ports:
+            - containerPort: 8082  # Override containerPort for dev
 ```
 
 #### Production Service (`overlays/prod/service.yaml`)
@@ -164,15 +177,14 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: flask-web-app-service-prod
-  namespace: prod-web-app
+  name: flask-app-service-prod
 spec:
   selector:
-    app: flask-web-app
+    app: web-app
   ports:
   - protocol: TCP
-    port: 80
-    targetPort: 8082
+    port: 8082  # External port for production
+    targetPort: 8082  # Internal container port, matches the environment variable in the deployment patch
   type: LoadBalancer
 ```
 
@@ -183,8 +195,13 @@ resources:
   - namespace.yaml
   - service.yaml
 
-patchesStrategicMerge:
-  - patch.yaml
+namespace: prod-web-app
+
+patches:
+  - path: patch.yaml
+    target:
+      kind: Deployment
+      name: web-app
 ```
 
 ## Top-Level Kustomization
