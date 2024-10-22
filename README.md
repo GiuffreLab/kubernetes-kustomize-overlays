@@ -3,6 +3,8 @@
 ## Overview
 This repository contains Kubernetes configurations for deploying a Flask web application using Kustomize. The repository is organized into base and overlay directories to handle multiple environments (e.g., development and production). The goal of this documentation is to guide you through deploying the application in different environments using Kubernetes.
 
+[GitHub Repo for Flask App Demo](https://github.com/GiuffreLab/flask-app-demo)
+
 ## Repository Structure
 The repository follows an overlay pattern for Kubernetes manifests:
 
