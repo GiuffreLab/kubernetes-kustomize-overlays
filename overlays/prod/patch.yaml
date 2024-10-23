@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: web-app  # Must match the base deployment name for patching
 spec:
-  replicas: 5  # Override replica count for dev
+  replicas: 5  # Override replica count for prod
   template:
     spec:
       containers:
@@ -11,6 +11,18 @@ spec:
           image: giuffrelab/flask-web-app:v1
           env:
             - name: PORT
-              value: "8082"  # Replace the PORT for the dev environment
+              value: "8082"  # Replace the PORT for the prod environment
           ports:
-            - containerPort: 8082  # Override containerPort for dev
+            - containerPort: 8082  # Override containerPort for prod
+          readinessProbe:
+            httpGet:
+              path: /readiness
+              port: 8082
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8082
+            initialDelaySeconds: 15
+            periodSeconds: 20
