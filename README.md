@@ -186,6 +186,16 @@ Once the rollout is complete, you can verify that the new version is running:
   ```
   Check the `Image` field under the container section to confirm the version. You can also view the readiness and liveness probe configurations and their current status to verify that the health checks are working as expected.
 
+You can add an annotation to the rollout with this command:
+
+```sh
+kubectl annotate deployment web-app \
+  kubernetes.io/change-cause="Updated the container image to v3" \
+  -n <namespace> --overwrite
+```
+
+`Updated the container image to v3` would be the annotation added to the rollout
+
 ### Step 5: Rollback if Necessary
 You can get a view of the rollback history buy using:
 ```sh
