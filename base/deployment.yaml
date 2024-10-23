@@ -14,11 +14,39 @@ spec:
       labels:
         app: web-app
     spec:
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 3000
+        fsGroup: 2000
       containers:
         - name: web-app
           image: giuffrelab/flask-web-app:v1
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
           env:
             - name: PORT
               value: "8080"  # Keeping the port configuration
           ports:
             - containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: /readiness
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "250m"
+            limits:
+              memory: "256Mi"
+              cpu: "500m"
