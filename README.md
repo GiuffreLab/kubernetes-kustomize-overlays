@@ -138,6 +138,18 @@ spec:
               value: "8081"  # Replace the PORT for the dev environment
           ports:
             - containerPort: 8081  # Override containerPort for dev
+          readinessProbe:
+            httpGet:
+              path: /readiness
+              port: 8081
+            initialDelaySeconds: 3
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8081
+            initialDelaySeconds: 10
+            periodSeconds: 15
 ```
 
 ### Step 2: Apply the Changes
