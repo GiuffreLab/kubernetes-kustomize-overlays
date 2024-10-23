@@ -1,3 +1,4 @@
+```yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -15,17 +16,19 @@ spec:
         app: web-app
     spec:
       securityContext:
-        runAsUser: 1000
-        runAsGroup: 3000
-        fsGroup: 2000
+        seccompProfile:
+          type: RuntimeDefault
       containers:
         - name: web-app
           image: giuffrelab/flask-web-app:v1
           securityContext:
             allowPrivilegeEscalation: false
+            privileged: false
+            runAsNonRoot: true
+            runAsUser: 1000  # Using a non-zero UID to ensure it's not running as root
             capabilities:
               drop:
-                - ALL
+                - ALL  # Drop all Linux capabilities unless explicitly needed
           env:
             - name: PORT
               value: "8080"  # Keeping the port configuration
@@ -50,3 +53,5 @@ spec:
             limits:
               memory: "256Mi"
               cpu: "500m"
+```
+
