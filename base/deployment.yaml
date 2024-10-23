@@ -1,4 +1,3 @@
-```yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -53,5 +52,4 @@ spec:
             limits:
               memory: "256Mi"
               cpu: "500m"
-```
 
