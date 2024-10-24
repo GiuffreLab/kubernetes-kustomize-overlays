@@ -47,7 +47,6 @@ The base deployment has several security configurations to ensure the container 
   - **`runAsNonRoot: true`**: Forces the container to run as a non-root user. Running as a non-root user limits the potential damage if the container is compromised.
   - **`runAsUser: 1000`**: Specifies the user ID (UID) under which the container should run. Using a non-zero UID ensures that the container does not run as the root user.
   - **`capabilities.drop: [ALL]`**: Drops all Linux capabilities for the container. Linux capabilities are granular permissions that a process can have, and dropping all of them minimizes the attack surface.
-The **base** directory contains the generic Kubernetes resources that apply to all environments. This includes the main deployment manifest and a `kustomization.yaml` file to aggregate them.
 
 ## Viewing the Kustomize Structure
 To view how the overlays modify the base configuration, you can use the `kubectl kustomize` command to generate the manifests before applying them. This is helpful to verify the changes made by each overlay.
