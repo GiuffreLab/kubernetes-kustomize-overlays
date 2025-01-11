@@ -20,6 +20,7 @@ spec:
       containers:
         - name: web-app
           image: giuffrelab/flask-web-app:v1
+          imagePullPolicy: Always  # Ensures the latest image is always pulled
           securityContext:
             allowPrivilegeEscalation: false
             privileged: false
@@ -52,4 +53,3 @@ spec:
             limits:
               memory: "256Mi"
               cpu: "500m"
-
